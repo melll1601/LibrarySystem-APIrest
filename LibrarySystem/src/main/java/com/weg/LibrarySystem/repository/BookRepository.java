@@ -5,6 +5,8 @@ import com.weg.LibrarySystem.util.ConnectionMysql;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Repository
@@ -61,5 +63,60 @@ public class BookRepository {
         }
 
         return false;
+    }
+
+    public List<Book> listBooks() throws SQLException{
+
+        List<Book> books = new ArrayList<>();
+
+        String query = """
+                SELECT
+                id, title, author, yearPublication
+                FROM Book
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+        PreparedStatement stmt = conn.prepareStatement(query)){
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                books.add(new Book(
+                        rs.getLong("id"),
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getInt("yearPublication")
+                ));
+            }
+        }
+        return books;
+    }
+
+    public Book searchByIdBook(Long id) throws SQLException {
+
+        String query = """
+                SELECT
+                id, title, author, yearPublication
+                FROM Book
+                WHERE id = ?
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+
+            stmt.setLong(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Book(
+                        rs.getLong("id"),
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getInt("yearPublication")
+                );
+            }
+        }
+
+        return null;
     }
 }

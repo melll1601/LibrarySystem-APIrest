@@ -1,13 +1,13 @@
 package com.weg.LibrarySystem.controller;
 
+import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.model.User;
 import com.weg.LibrarySystem.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/librarySystem/user")
@@ -29,5 +29,28 @@ public class UserController {
         }
 
         return user;
+    }
+
+    @GetMapping
+    public List<User> getUsers(){
+        List<User> users = new ArrayList<>();
+
+        try{
+            users = userService.listUsers();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return users;
+    }
+
+    @GetMapping("/{id}")
+    public User searchByIdUser(@PathVariable Long id) {
+        try {
+            return userService.searchByIdUser(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

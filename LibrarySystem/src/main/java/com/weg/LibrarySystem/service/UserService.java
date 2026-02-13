@@ -1,11 +1,14 @@
 package com.weg.LibrarySystem.service;
 
 import com.weg.LibrarySystem.model.Book;
+import com.weg.LibrarySystem.model.Loan;
 import com.weg.LibrarySystem.model.User;
 import com.weg.LibrarySystem.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -23,6 +26,19 @@ public class UserService {
 
         }catch (SQLException error){
             throw new RuntimeException("Error registering user", error);
+        }
+    }
+
+    public List<User> listUsers() throws SQLException{
+        return userRepository.listUsers();
+    }
+
+    public User searchByIdUser(Long id) throws SQLException{
+
+        if (userRepository.userExists(id)){
+            return userRepository.searchByIdUser(id);
+        }else {
+            throw new RuntimeException("ID does not exist");
         }
     }
 }

@@ -6,6 +6,9 @@ import com.weg.LibrarySystem.util.ConnectionMysql;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
 public class UserRepository {
 
@@ -59,5 +62,59 @@ public class UserRepository {
 
         return false;
 
+    }
+
+    public List<User> listUsers() throws SQLException{
+
+        List<User> users = new ArrayList<>();
+
+        String query = """
+                SELECT
+                id, name, email
+                FROM User
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+        PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                users.add(new User(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("email")
+                ));
+            }
+        }
+
+        return users;
+    }
+
+    public User searchByIdUser(Long id) throws SQLException{
+
+
+        String query = """
+                SELECT
+                id, name, email
+                FROM User
+                WHERE id = ?
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setLong(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                return (new User(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("email")
+                ));
+            }
+        }
+
+        return null;
     }
 }

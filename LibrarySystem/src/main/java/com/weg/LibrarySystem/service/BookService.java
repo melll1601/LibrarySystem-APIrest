@@ -5,6 +5,7 @@ import com.weg.LibrarySystem.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class BookService{
@@ -23,6 +24,19 @@ public class BookService{
 
         }catch (SQLException error){
             throw new RuntimeException("Error registering book", error);
+        }
+    }
+
+    public List<Book> listBooks() throws SQLException{
+        return bookRepository.listBooks();
+    }
+
+    public Book searchByIdBook(Long id) throws SQLException{
+
+        if (bookRepository.bookExists(id)){
+            return bookRepository.searchByIdBook(id);
+        }else {
+            throw new RuntimeException("ID does not exist");
         }
     }
 }
