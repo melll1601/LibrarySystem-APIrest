@@ -1,5 +1,6 @@
 package com.weg.LibrarySystem.repository;
 
+import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.model.Loan;
 import com.weg.LibrarySystem.util.ConnectionMysql;
 import org.springframework.stereotype.Repository;
@@ -121,6 +122,28 @@ public class LoanRepository {
         }
 
         return null;
+    }
+
+    public void updateLoan(Long id, Loan loan) throws SQLException{
+
+        String query = """
+                UPDATE Loan
+                SET bookId = ?, userId = ?, loanDate = ?, returnDate = ?
+                WHERE id = ?
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setLong(1, loan.getBookId());
+            stmt.setLong(2, loan.getUserId());
+            stmt.setDate(3, Date.valueOf(loan.getLoanDate()));
+            stmt.setDate(4, Date.valueOf(loan.getReturnDate()));
+            stmt.setLong(5, id);
+
+            stmt.executeUpdate();
+
+        }
     }
 
 }

@@ -51,4 +51,15 @@ public class LoanService {
             throw new RuntimeException("ID does not exist");
         }
     }
+    public void updateLoan(Long id, Loan loan) throws SQLException{
+
+        if (loanRepository.loanExists(id)){
+            loan.setId(id);
+            loanRepository.updateLoan(id, loan);
+
+        }else {
+            throw new RuntimeException("ID does not exist");
+        }
+
+    }
 }

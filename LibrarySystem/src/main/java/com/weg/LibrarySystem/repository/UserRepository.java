@@ -1,6 +1,7 @@
 package com.weg.LibrarySystem.repository;
 
 import com.mysql.cj.log.Log;
+import com.weg.LibrarySystem.model.Loan;
 import com.weg.LibrarySystem.model.User;
 import com.weg.LibrarySystem.util.ConnectionMysql;
 import org.springframework.stereotype.Repository;
@@ -116,5 +117,25 @@ public class UserRepository {
         }
 
         return null;
+    }
+
+    public void updateUser(Long id, User user) throws SQLException{
+
+        String query = """
+                UPDATE User
+                SET name = ?, email = ?
+                WHERE id = ?
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+
+            stmt.setString(1, user.getName());
+            stmt.setString(2, user.getEmail());
+            stmt.setLong(3, id);
+
+            stmt.executeUpdate();
+
+        }
     }
 }

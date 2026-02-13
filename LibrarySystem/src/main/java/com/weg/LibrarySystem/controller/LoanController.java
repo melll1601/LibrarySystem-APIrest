@@ -57,4 +57,18 @@ public class LoanController {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @PutMapping("/{id}")
+    public Loan updateLoan(
+            @PathVariable Long id,
+            @RequestBody Loan loan
+
+    ) throws SQLException {
+
+            loan.setId(id);
+            loanService.updateLoan(id, loan);
+
+            return loan;
+
+    }
 }

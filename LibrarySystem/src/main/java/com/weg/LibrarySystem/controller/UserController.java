@@ -53,4 +53,16 @@ public class UserController {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @PutMapping("/{id}")
+    public User updateUser(
+            @PathVariable Long id,
+            @RequestBody User user
+
+    ) throws SQLException {
+            user.setId(id);
+            userService.updateUser(id, user);
+
+            return user;
+    }
 }

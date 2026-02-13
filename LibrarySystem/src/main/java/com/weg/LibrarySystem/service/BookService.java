@@ -39,4 +39,13 @@ public class BookService{
             throw new RuntimeException("ID does not exist");
         }
     }
+    public void updateBook(Long id, Book book) throws SQLException{
+
+        if (bookRepository.bookExists(id)){
+            book.setId(id);
+            bookRepository.updateBook(id, book);
+        }else {
+            throw new RuntimeException("ID does not exist");
+        }
+    }
 }

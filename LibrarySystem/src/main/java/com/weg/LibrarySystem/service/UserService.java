@@ -41,4 +41,16 @@ public class UserService {
             throw new RuntimeException("ID does not exist");
         }
     }
+    public void updateUser(Long id, User user) throws SQLException{
+
+        if (userRepository.userExists(id)){
+            user.setId(id);
+            userRepository.updateUser(id, user);
+
+        }else {
+            throw new RuntimeException("ID does not exist");
+        }
+
+
+    }
 }

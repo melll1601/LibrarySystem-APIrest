@@ -119,4 +119,22 @@ public class BookRepository {
 
         return null;
     }
+
+    public void updateBook(Long id, Book book) throws SQLException{
+
+        String query = """
+                UPDATE Book SET title = ?, author = ?, yearPublication = ?
+                WHERE id = ?
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, book.getTitle());
+            stmt.setString(2, book.getAuthor());
+            stmt.setInt(3, book.getYearPublication());
+            stmt.setLong(4, id);
+            stmt.executeUpdate();
+        }
+    }
 }
