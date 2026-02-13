@@ -66,4 +66,10 @@ public class BookController {
 
             return book;
     }
+
+    @DeleteMapping("/{id}")
+    public boolean deleteBook(@PathVariable Long id) throws SQLException{
+       return bookService.deleteBook(id);
+    }
+
 }

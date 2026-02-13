@@ -50,7 +50,15 @@ public class UserService {
         }else {
             throw new RuntimeException("ID does not exist");
         }
+    }
 
+    public boolean deleteUser(Long id) throws SQLException {
 
+        if (userRepository.userExists(id)){
+            return userRepository.deleteUser(id);
+
+        }else{
+            throw new RuntimeException("ID does not exist");
+        }
     }
 }

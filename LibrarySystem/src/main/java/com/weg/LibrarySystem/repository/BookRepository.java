@@ -137,4 +137,27 @@ public class BookRepository {
             stmt.executeUpdate();
         }
     }
+
+    public Boolean deleteBook(Long id) throws SQLException{
+
+        String query = """
+                DELETE FROM Book
+                WHERE id = ?
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setLong(1, id);
+
+
+            int linhasAfetadas = stmt.executeUpdate();
+
+            if (linhasAfetadas == 0) {
+                System.out.println("Nenhum contato encontrado");
+                throw new RuntimeException();
+            }
+        }
+        return false;
+    }
 }

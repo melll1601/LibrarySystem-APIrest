@@ -60,6 +60,17 @@ public class LoanService {
         }else {
             throw new RuntimeException("ID does not exist");
         }
-
     }
+
+    public boolean deleteLoan(Long id) throws SQLException {
+
+        if (loanRepository.loanExists(id)){
+            return loanRepository.deleteLoan(id);
+
+        }else {
+            throw new RuntimeException("ID does not exist");
+        }
+    }
+
+
 }

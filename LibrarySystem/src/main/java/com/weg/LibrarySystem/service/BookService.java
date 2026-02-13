@@ -48,4 +48,14 @@ public class BookService{
             throw new RuntimeException("ID does not exist");
         }
     }
+
+    public Boolean deleteBook(Long id) throws SQLException {
+
+        if (bookRepository.bookExists(id)){
+            return bookRepository.deleteBook(id);
+
+        }else {
+            throw new RuntimeException("ID does not exist");
+        }
+    }
 }

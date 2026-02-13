@@ -58,17 +58,8 @@ public class LoanController {
         }
     }
 
-    @PutMapping("/{id}")
-    public Loan updateLoan(
-            @PathVariable Long id,
-            @RequestBody Loan loan
-
-    ) throws SQLException {
-
-            loan.setId(id);
-            loanService.updateLoan(id, loan);
-
-            return loan;
-
+    @DeleteMapping("/{id}")
+    public boolean deleteLoan(@PathVariable Long id) throws SQLException{
+        return loanService.deleteLoan(id);
     }
 }
