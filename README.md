@@ -279,4 +279,3 @@ Entidades: Book, User, Loan
 
 Primeira Atividade de API REST  
 **Data:** 13-02-2026  
-```
