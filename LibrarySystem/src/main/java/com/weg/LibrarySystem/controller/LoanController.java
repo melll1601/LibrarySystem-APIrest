@@ -58,8 +58,35 @@ public class LoanController {
         }
     }
 
+    @PutMapping("/{id}")
+    public Loan updateLoan(
+            @PathVariable Long id,
+            @RequestBody Loan loan
+
+    ) throws SQLException {
+        loan.setId(id);
+        loanService.updateLoan(id, loan);
+
+        return loan;
+    }
+
     @DeleteMapping("/{id}")
     public boolean deleteLoan(@PathVariable Long id) throws SQLException{
         return loanService.deleteLoan(id);
     }
+
+    @GetMapping("/userloan/{id}")
+    public List<Loan> searchByUserIdLoan(@PathVariable Long id) {
+        List<Loan> loans = new ArrayList<>();
+
+        try {
+            loans = loanService.searchByUserIdLoan(id);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return loans;
+    }
+
 }

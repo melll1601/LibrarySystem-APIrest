@@ -22,22 +22,16 @@ public class LoanService {
         this.loanRepository = loanRepository;
     }
 
-    public Loan registerLoan(Loan loan) throws SQLException{
+    public Loan registerLoan(Loan loan) throws SQLException {
 
-        try {
-
-            if (bookRepository.bookExists(loan.getBookId()) && userRepository.userExists(loan.getUserId())){
-                loanRepository.registerLoan(loan);
-            }else {
-                throw new RuntimeException("Error registering loan");
-            }
-
-        }catch (SQLException error){
-            error.printStackTrace();
+        if (loanRepository.existsOpenLoanByBookId(loan.getBookId())) {
+            throw new IllegalStateException("Book is already loaned");
         }
 
-        return loan;
+        return loanRepository.registerLoan(loan);
+
     }
+
 
     public List<Loan> listLoan() throws SQLException{
         return loanRepository.listLoan();
@@ -51,6 +45,17 @@ public class LoanService {
             throw new RuntimeException("ID does not exist");
         }
     }
+
+    public List<Loan> searchByUserIdLoan(Long userId) throws SQLException {
+        List<Loan> loans = loanRepository.searchByUserIdLoan(userId);
+
+        if (loans.isEmpty()) {
+            throw new RuntimeException("User ID does not exist or has no loans");
+        }
+
+        return loans;
+    }
+
     public void updateLoan(Long id, Loan loan) throws SQLException{
 
         if (loanRepository.loanExists(id)){

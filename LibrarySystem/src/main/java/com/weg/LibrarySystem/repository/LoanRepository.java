@@ -14,20 +14,27 @@ public class LoanRepository {
 
     public Loan registerLoan(Loan loan) throws SQLException{
 
+        if (existsOpenLoanByBookId(loan.getBookId())) {
+            throw new IllegalStateException("Book is already loaned");
+        }
+
         String query = """
-                INSERT INTO Loan
-                (bookId, userId, loanDate, returnDate)
-                VALUES
-                (?, ?, ?, ?)
-                """;
+            INSERT INTO Loan
+            (bookId, userId, loanDate, returnDate)
+            VALUES
+            (?, ?, ?, ?)
+            """;
 
         try(Connection conn = ConnectionMysql.connect();
             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 
             stmt.setLong(1, loan.getBookId());
             stmt.setLong(2, loan.getUserId());
+
             stmt.setDate(3, Date.valueOf(loan.getLoanDate()));
-            stmt.setDate(4, Date.valueOf(loan.getReturnDate()));
+
+            stmt.setNull(4, Types.DATE);
+
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -37,6 +44,7 @@ public class LoanRepository {
             }
 
             return null;
+
         }
     }
 
@@ -124,6 +132,36 @@ public class LoanRepository {
         return null;
     }
 
+    public List<Loan> searchByUserIdLoan(Long userId) throws SQLException {
+        List<Loan> loans = new ArrayList<>();
+
+        String query = """
+            SELECT id, bookId, userId, loanDate, returnDate
+            FROM Loan
+            WHERE userId = ?
+            """;
+
+        try (Connection conn = ConnectionMysql.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setLong(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                loans.add(new Loan(
+                        rs.getLong("id"),
+                        rs.getLong("bookId"),
+                        rs.getLong("userId"),
+                        rs.getDate("loanDate").toLocalDate(),
+                        rs.getDate("returnDate") != null ? rs.getDate("returnDate").toLocalDate() : null
+                ));
+            }
+        }
+
+        return loans;
+    }
+
+
     public void updateLoan(Long id, Loan loan) throws SQLException{
 
         String query = """
@@ -168,4 +206,23 @@ public class LoanRepository {
             return false;
         }
     }
+
+    public boolean existsOpenLoanByBookId(Long bookId) throws SQLException {
+        String query = """
+                SELECT 1 FROM Loan
+                WHERE bookId = ?
+                AND returnDate IS NULL
+                LIMIT 1
+                """;
+
+        try(Connection conn = ConnectionMysql.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setLong(1, bookId);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next();
+        }
+    }
+
 }
