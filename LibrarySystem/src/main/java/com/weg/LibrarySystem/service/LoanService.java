@@ -1,5 +1,8 @@
 package com.weg.LibrarySystem.service;
 
+import com.weg.LibrarySystem.dto.loan.LoanRequestDto;
+import com.weg.LibrarySystem.dto.loan.LoanResponseDto;
+import com.weg.LibrarySystem.mapper.LoanMapper;
 import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.model.Loan;
 import com.weg.LibrarySystem.repository.BookRepository;
@@ -12,26 +15,34 @@ import java.util.List;
 
 @Service
 public class LoanService {
+
+    private final LoanMapper loanMapper;
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
     private final LoanRepository loanRepository;
 
-    public LoanService(BookRepository bookRepository, UserRepository userRepository, LoanRepository loanRepository) {
+    public LoanService(LoanMapper loanMapper, BookRepository bookRepository, UserRepository userRepository, LoanRepository loanRepository) {
+        this.loanMapper = loanMapper;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
         this.loanRepository = loanRepository;
     }
 
-    public Loan registerLoan(Loan loan) throws SQLException {
+    public LoanResponseDto registerLoan(LoanRequestDto loanRequestDto) throws SQLException {
 
-        if (loanRepository.existsOpenLoanByBookId(loan.getBookId())) {
-            throw new IllegalStateException("Book is already loaned");
-        }
+        Loan loan = loanMapper.forEntity(loanRequestDto);
+        validateBookIsNotLoaned(loan.getBookId());
 
-        return loanRepository.registerLoan(loan);
-
+        return loanMapper.forResponseDto(
+                loanRepository.registerLoan(loan)
+        );
     }
 
+    public void validateBookIsNotLoaned(Long bookId) throws SQLException {
+        if (loanRepository.existsOpenLoanByBookId(bookId)) {
+            throw new RuntimeException("Book is already loaned");
+        }
+    }
 
     public List<Loan> listLoan() throws SQLException{
         return loanRepository.listLoan();

@@ -1,5 +1,7 @@
 package com.weg.LibrarySystem.controller;
 
+import com.weg.LibrarySystem.dto.loan.LoanRequestDto;
+import com.weg.LibrarySystem.dto.loan.LoanResponseDto;
 import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.model.Loan;
 import com.weg.LibrarySystem.repository.LoanRepository;
@@ -21,18 +23,16 @@ public class LoanController {
     }
 
     @PostMapping
-    public Loan postLoan(
-            @RequestBody Loan loan
+    public LoanResponseDto postLoan(
+            @RequestBody LoanRequestDto loanRequestDto
             ){
 
         try{
-            loan = loanService.registerLoan(loan);
+            return loanService.registerLoan(loanRequestDto);
 
         } catch (SQLException error) {
             throw new RuntimeException(error.getMessage());
         }
-
-        return loan;
     }
 
     @GetMapping

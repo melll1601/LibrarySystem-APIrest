@@ -1,5 +1,7 @@
 package com.weg.LibrarySystem.controller;
 
+import com.weg.LibrarySystem.dto.user.UserRequestDto;
+import com.weg.LibrarySystem.dto.user.UserResponseDto;
 import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.model.User;
 import com.weg.LibrarySystem.service.UserService;
@@ -19,16 +21,14 @@ public class UserController {
     }
 
     @PostMapping
-    public User postUser(
-            @RequestBody User user
+    public UserResponseDto postUser(
+            @RequestBody UserRequestDto userRequestDto
     ){
         try{
-            user = userService.registerUser(user);
+            return  userService.registerUser(userRequestDto);
         } catch (SQLException error) {
             throw new RuntimeException(error);
         }
-
-        return user;
     }
 
     @GetMapping

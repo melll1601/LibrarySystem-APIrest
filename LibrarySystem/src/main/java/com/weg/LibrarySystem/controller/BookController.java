@@ -1,6 +1,7 @@
 package com.weg.LibrarySystem.controller;
+import com.weg.LibrarySystem.dto.book.BookRequestDto;
+import com.weg.LibrarySystem.dto.book.BookResponseDto;
 import com.weg.LibrarySystem.model.Book;
-import com.weg.LibrarySystem.repository.BookRepository;
 import com.weg.LibrarySystem.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +21,15 @@ public class BookController {
 
 
     @PostMapping
-    public Book postBook(
-            @RequestBody Book book
-    ){
+    public BookResponseDto postBook(
+            @RequestBody BookRequestDto bookRequestDto
+            ){
         try {
-            book = bookService.registerBook(book);
+           return bookService.registerBook(bookRequestDto);
 
         }catch (SQLException error){
             throw new RuntimeException(error);
         }
-
-        return book;
     }
 
     @GetMapping

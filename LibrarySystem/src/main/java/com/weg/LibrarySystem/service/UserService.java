@@ -1,5 +1,8 @@
 package com.weg.LibrarySystem.service;
 
+import com.weg.LibrarySystem.dto.user.UserRequestDto;
+import com.weg.LibrarySystem.dto.user.UserResponseDto;
+import com.weg.LibrarySystem.mapper.UserMapper;
 import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.model.Loan;
 import com.weg.LibrarySystem.model.User;
@@ -12,21 +15,17 @@ import java.util.List;
 @Service
 public class UserService {
 
+    private final UserMapper userMapper;
     private final UserRepository userRepository;
-    public UserService(UserRepository userRepository) {
+    public UserService(UserMapper userMapper, UserRepository userRepository) {
+        this.userMapper = userMapper;
         this.userRepository = userRepository;
     }
 
 
-    public User registerUser(User user) throws SQLException {
-
-        try {
-            userRepository.registerUser(user);
-            return user;
-
-        }catch (SQLException error){
-            throw new RuntimeException("Error registering user", error);
-        }
+    public UserResponseDto registerUser(UserRequestDto userRequestDto) throws SQLException {
+        User user = userMapper.forEntity(userRequestDto);
+        return userMapper.forResponseDto(userRepository.registerUser(user));
     }
 
     public List<User> listUsers() throws SQLException{

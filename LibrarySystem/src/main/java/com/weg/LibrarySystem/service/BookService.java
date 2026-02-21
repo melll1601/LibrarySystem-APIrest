@@ -1,5 +1,8 @@
 package com.weg.LibrarySystem.service;
 
+import com.weg.LibrarySystem.dto.book.BookRequestDto;
+import com.weg.LibrarySystem.dto.book.BookResponseDto;
+import com.weg.LibrarySystem.mapper.BookMapper;
 import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -10,21 +13,17 @@ import java.util.List;
 @Service
 public class BookService{
 
+    private final BookMapper bookMapper;
     private final BookRepository bookRepository;
 
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookMapper bookMapper, BookRepository bookRepository) {
+        this.bookMapper = bookMapper;
         this.bookRepository = bookRepository;
     }
 
-    public Book registerBook(Book book) throws SQLException {
-
-        try {
-            bookRepository.registerBook(book);
-            return book;
-
-        }catch (SQLException error){
-            throw new RuntimeException("Error registering book", error);
-        }
+    public BookResponseDto registerBook(BookRequestDto bookRequestDto) throws SQLException {
+        Book book = bookMapper.forEntity(bookRequestDto);
+        return bookMapper.forResponseDto(bookRepository.registerBook(book));
     }
 
     public List<Book> listBooks() throws SQLException{
