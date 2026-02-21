@@ -28,8 +28,9 @@ public class UserService {
         return userMapper.forResponseDto(userRepository.registerUser(user));
     }
 
-    public List<User> listUsers() throws SQLException{
-        return userRepository.listUsers();
+    public List<UserResponseDto> listUsers() throws SQLException{
+        List<User> users = userRepository.listUsers();
+        return userMapper.forResponseListDto(users);
     }
 
     public User searchByIdUser(Long id) throws SQLException{

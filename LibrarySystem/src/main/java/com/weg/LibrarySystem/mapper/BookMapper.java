@@ -5,6 +5,10 @@ import com.weg.LibrarySystem.dto.book.BookResponseDto;
 import com.weg.LibrarySystem.model.Book;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class BookMapper {
 
@@ -21,6 +25,15 @@ public class BookMapper {
                 book.getTitle(),
                 book.getAuthor(),
                 book.getYearPublication());
+    }
+
+    public List<BookResponseDto> forResponseListDto(List<Book> books) throws SQLException{
+        List<BookResponseDto> listResponseBook = new ArrayList<>();
+
+        for (Book book : books){
+            listResponseBook.add(forResponseDto(book));
+        }
+        return listResponseBook;
     }
 }
 

@@ -33,16 +33,14 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> getBooks(){
-        List<Book> books = new ArrayList<>();
+    public List<BookResponseDto> getBooks(){
 
         try {
-            books = bookService.listBooks();
+            return bookService.listBooks();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return books;
     }
 
     @GetMapping("/{id}")

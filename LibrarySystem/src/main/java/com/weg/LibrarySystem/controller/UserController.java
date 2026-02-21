@@ -32,17 +32,14 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers(){
-        List<User> users = new ArrayList<>();
+    public List<UserResponseDto> getUsers(){
 
         try{
-            users = userService.listUsers();
+            return userService.listUsers();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return users;
     }
 
     @GetMapping("/{id}")

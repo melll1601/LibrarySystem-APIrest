@@ -5,6 +5,9 @@ import com.weg.LibrarySystem.dto.loan.LoanResponseDto;
 import com.weg.LibrarySystem.model.Loan;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class LoanMapper {
 
@@ -25,5 +28,15 @@ public class LoanMapper {
                 loan.getLoanDate(),
                 loan.getReturnDate()
         );
+    }
+
+    public List<LoanResponseDto> forResponseListDto(List<Loan> loans){
+        List<LoanResponseDto> listResponseLoan = new ArrayList<>();
+
+        for (Loan loan : loans){
+            listResponseLoan.add(forResponseDto(loan));
+        }
+
+        return listResponseLoan;
     }
 }

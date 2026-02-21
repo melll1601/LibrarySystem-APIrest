@@ -26,8 +26,9 @@ public class BookService{
         return bookMapper.forResponseDto(bookRepository.registerBook(book));
     }
 
-    public List<Book> listBooks() throws SQLException{
-        return bookRepository.listBooks();
+    public List<BookResponseDto> listBooks() throws SQLException{
+        List<Book> books = bookRepository.listBooks();
+        return bookMapper.forResponseListDto(books);
     }
 
     public Book searchByIdBook(Long id) throws SQLException{

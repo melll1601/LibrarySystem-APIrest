@@ -36,17 +36,15 @@ public class LoanController {
     }
 
     @GetMapping
-    public List<Loan> getLoan(){
+    public List<LoanResponseDto> getLoan(){
         List<Loan> loans = new ArrayList<>();
 
         try {
-            loans = loanService.listLoan();
+            return loanService.listLoan();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return loans;
     }
 
     @GetMapping("/{id}")

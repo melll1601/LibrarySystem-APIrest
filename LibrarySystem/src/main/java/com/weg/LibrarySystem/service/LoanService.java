@@ -44,8 +44,9 @@ public class LoanService {
         }
     }
 
-    public List<Loan> listLoan() throws SQLException{
-        return loanRepository.listLoan();
+    public List<LoanResponseDto> listLoan() throws SQLException{
+        List<Loan> loans = loanRepository.listLoan();
+        return loanMapper.forResponseListDto(loans);
     }
 
     public Loan searchByIdLoan(Long id) throws SQLException{
