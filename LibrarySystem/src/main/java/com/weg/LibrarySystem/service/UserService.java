@@ -33,10 +33,11 @@ public class UserService {
         return userMapper.forResponseListDto(users);
     }
 
-    public User searchByIdUser(Long id) throws SQLException{
+    public UserResponseDto searchByIdUser(Long id) throws SQLException{
 
         if (userRepository.userExists(id)){
-            return userRepository.searchByIdUser(id);
+            User user = userRepository.searchByIdUser(id);
+            return userMapper.forResponseDto(user);
         }else {
             throw new RuntimeException("ID does not exist");
         }

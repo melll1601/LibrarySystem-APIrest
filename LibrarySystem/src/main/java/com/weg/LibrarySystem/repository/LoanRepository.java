@@ -6,6 +6,7 @@ import com.weg.LibrarySystem.util.ConnectionMysql;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,27 +75,36 @@ public class LoanRepository {
 
     }
 
-    public List<Loan> listLoan() throws SQLException{
+    public List<Loan> listLoan() throws SQLException {
 
         List<Loan> loans = new ArrayList<>();
 
         String query = """
-                SELECT
-                id, bookId, userId, loanDate, returnDate
-                FROM Loan
-                """;
+            SELECT
+            id, bookId, userId, loanDate, returnDate
+            FROM Loan
+            """;
 
-        try(Connection conn = ConnectionMysql.connect();
-        PreparedStatement stmt = conn.prepareStatement(query)){
+        try (Connection conn = ConnectionMysql.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()){
+
+            while (rs.next()) {
+
+                Date sqlReturnDate = rs.getDate("returnDate");
+                LocalDate returnDate = null;
+
+                if (sqlReturnDate != null) {
+                    returnDate = sqlReturnDate.toLocalDate();
+                }
+
                 loans.add(new Loan(
                         rs.getLong("id"),
                         rs.getLong("bookId"),
                         rs.getLong("userId"),
-                        rs.getDate("loanDate").toLocalDate(),
-                        rs.getDate("returnDate").toLocalDate()
+                        rs.getDate("loanDate").toLocalDate(), // essa normalmente NÃO é null
+                        returnDate
                 ));
             }
         }
@@ -102,30 +112,40 @@ public class LoanRepository {
         return loans;
     }
 
-    public Loan searchByIdLoan(Long id) throws SQLException{
-
+    public Loan searchByIdLoan(Long id) throws SQLException {
 
         String query = """
-                SELECT
-                id, bookId, userId, loanDate, returnDate
-                FROM Loan
-                WHERE id = ?
-                """;
+            SELECT
+            id, bookId, userId, loanDate, returnDate
+            FROM Loan
+            WHERE id = ?
+            """;
 
-        try(Connection conn = ConnectionMysql.connect();
-            PreparedStatement stmt = conn.prepareStatement(query)){
+        try (Connection conn = ConnectionMysql.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setLong(1, id);
 
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()){
-                return (new Loan(
+
+            if (rs.next()) {
+
+                LocalDate loanDate = rs.getDate("loanDate").toLocalDate();
+
+                Date sqlReturnDate = rs.getDate("returnDate");
+                LocalDate returnDate = null;
+
+                if (sqlReturnDate != null) {
+                    returnDate = sqlReturnDate.toLocalDate();
+                }
+
+                return new Loan(
                         rs.getLong("id"),
                         rs.getLong("bookId"),
                         rs.getLong("userId"),
-                        rs.getDate("loanDate").toLocalDate(),
-                        rs.getDate("returnDate").toLocalDate()
-                ));
+                        loanDate,
+                        returnDate
+                );
             }
         }
 

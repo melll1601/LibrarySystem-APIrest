@@ -49,10 +49,11 @@ public class LoanService {
         return loanMapper.forResponseListDto(loans);
     }
 
-    public Loan searchByIdLoan(Long id) throws SQLException{
+    public LoanResponseDto searchByIdLoan(Long id) throws SQLException{
 
         if (loanRepository.loanExists(id)){
-            return loanRepository.searchByIdLoan(id);
+            Loan loan = loanRepository.searchByIdLoan(id);
+            return loanMapper.forResponseDto(loan);
         }else {
             throw new RuntimeException("ID does not exist");
         }

@@ -31,10 +31,11 @@ public class BookService{
         return bookMapper.forResponseListDto(books);
     }
 
-    public Book searchByIdBook(Long id) throws SQLException{
+    public BookResponseDto searchByIdBook(Long id) throws SQLException{
 
         if (bookRepository.bookExists(id)){
-            return bookRepository.searchByIdBook(id);
+            Book book = bookRepository.searchByIdBook(id);
+            return bookMapper.forResponseDto(book);
         }else {
             throw new RuntimeException("ID does not exist");
         }

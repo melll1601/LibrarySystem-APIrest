@@ -44,7 +44,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public Book searchByIdBook(@PathVariable Long id) {
+    public BookResponseDto searchByIdBook(@PathVariable Long id) {
         try {
             return bookService.searchByIdBook(id);
         } catch (SQLException e) {

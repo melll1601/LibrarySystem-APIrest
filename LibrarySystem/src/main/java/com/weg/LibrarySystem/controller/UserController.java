@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User searchByIdUser(@PathVariable Long id) {
+    public UserResponseDto searchByIdUser(@PathVariable Long id) {
         try {
             return userService.searchByIdUser(id);
         } catch (SQLException e) {

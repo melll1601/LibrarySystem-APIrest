@@ -48,7 +48,7 @@ public class LoanController {
     }
 
     @GetMapping("/{id}")
-    public Loan searchByIdLoan(@PathVariable Long id) {
+    public LoanResponseDto searchByIdLoan(@PathVariable Long id) {
         try {
             return loanService.searchByIdLoan(id);
         } catch (SQLException e) {
