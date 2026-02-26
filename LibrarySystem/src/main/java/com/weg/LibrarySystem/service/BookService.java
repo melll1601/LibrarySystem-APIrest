@@ -40,11 +40,14 @@ public class BookService{
             throw new RuntimeException("ID does not exist");
         }
     }
-    public void updateBook(Long id, Book book) throws SQLException{
+    public BookResponseDto updateBook(BookRequestDto dto, Long id) throws SQLException{
 
         if (bookRepository.bookExists(id)){
+            Book book = bookMapper.forEntity(dto);
             book.setId(id);
             bookRepository.updateBook(id, book);
+            return bookMapper.forResponseDto(book);
+
         }else {
             throw new RuntimeException("ID does not exist");
         }

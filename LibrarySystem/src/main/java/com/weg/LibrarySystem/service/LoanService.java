@@ -69,11 +69,14 @@ public class LoanService {
         return loans;
     }
 
-    public void updateLoan(Long id, Loan loan) throws SQLException{
+    public LoanResponseDto updateLoan(Long id, LoanRequestDto dto) throws SQLException{
 
         if (loanRepository.loanExists(id)){
+            Loan loan = loanMapper.forEntity(dto);
             loan.setId(id);
             loanRepository.updateLoan(id, loan);
+
+            return loanMapper.forResponseDto(loan);
 
         }else {
             throw new RuntimeException("ID does not exist");

@@ -53,15 +53,17 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public Book updateBook(
+    public BookResponseDto updateBook(
             @PathVariable Long id,
-            @RequestBody Book book
+            @RequestBody BookRequestDto bookRequestDto
 
-    ) throws SQLException {
-            book.setId(id);
-            bookService.updateBook(id, book);
+    ) {
 
-            return book;
+        try {
+            return bookService.updateBook(bookRequestDto, id);
+        }catch (SQLException error) {
+            throw new RuntimeException(error.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

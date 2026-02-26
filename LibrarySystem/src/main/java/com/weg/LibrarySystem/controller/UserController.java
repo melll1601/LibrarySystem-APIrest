@@ -52,15 +52,16 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(
+    public UserResponseDto updateUser(
             @PathVariable Long id,
-            @RequestBody User user
+            @RequestBody UserRequestDto userRequestDto
 
-    ) throws SQLException {
-        user.setId(id);
-        userService.updateUser(id, user);
-
-        return user;
+    ) {
+        try {
+            return userService.updateUser(id, userRequestDto);
+        }catch (SQLException error){
+            throw new RuntimeException(error.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

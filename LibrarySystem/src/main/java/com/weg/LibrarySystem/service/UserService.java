@@ -42,11 +42,13 @@ public class UserService {
             throw new RuntimeException("ID does not exist");
         }
     }
-    public void updateUser(Long id, User user) throws SQLException{
+    public UserResponseDto updateUser(Long id, UserRequestDto dto) throws SQLException{
 
         if (userRepository.userExists(id)){
+            User user = userMapper.forEntity(dto);
             user.setId(id);
             userRepository.updateUser(id, user);
+            return userMapper.forResponseDto(user);
 
         }else {
             throw new RuntimeException("ID does not exist");
