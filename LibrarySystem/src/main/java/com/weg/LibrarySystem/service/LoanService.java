@@ -59,14 +59,13 @@ public class LoanService {
         }
     }
 
-    public List<Loan> searchByUserIdLoan(Long userId) throws SQLException {
+    public List<LoanResponseDto> searchByUserIdLoan(Long userId) throws SQLException {
         List<Loan> loans = loanRepository.searchByUserIdLoan(userId);
 
         if (loans.isEmpty()) {
             throw new RuntimeException("User ID does not exist or has no loans");
         }
-
-        return loans;
+        return loanMapper.forResponseListDto(loans);
     }
 
     public LoanResponseDto updateLoan(Long id, LoanRequestDto dto) throws SQLException{

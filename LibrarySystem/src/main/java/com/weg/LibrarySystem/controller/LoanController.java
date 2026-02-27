@@ -77,17 +77,15 @@ public class LoanController {
     }
 
     @GetMapping("/userloan/{id}")
-    public List<Loan> searchByUserIdLoan(@PathVariable Long id) {
+    public List<LoanResponseDto> searchByUserIdLoan(@PathVariable Long id) {
         List<Loan> loans = new ArrayList<>();
 
         try {
-            loans = loanService.searchByUserIdLoan(id);
-
+            return loanService.searchByUserIdLoan(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return loans;
     }
 
 }
