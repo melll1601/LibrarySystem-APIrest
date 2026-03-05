@@ -3,6 +3,7 @@ import com.weg.LibrarySystem.dto.book.BookRequestDto;
 import com.weg.LibrarySystem.dto.book.BookResponseDto;
 import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -21,9 +22,7 @@ public class BookController {
 
 
     @PostMapping
-    public BookResponseDto postBook(
-            @RequestBody BookRequestDto bookRequestDto
-            ){
+    public BookResponseDto postBook(@Valid @RequestBody BookRequestDto bookRequestDto){
         try {
            return bookService.registerBook(bookRequestDto);
 
@@ -54,6 +53,7 @@ public class BookController {
 
     @PutMapping("/{id}")
     public BookResponseDto updateBook(
+            @Valid
             @PathVariable Long id,
             @RequestBody BookRequestDto bookRequestDto
 

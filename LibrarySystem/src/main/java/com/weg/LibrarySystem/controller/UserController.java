@@ -5,6 +5,7 @@ import com.weg.LibrarySystem.dto.user.UserResponseDto;
 import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.model.User;
 import com.weg.LibrarySystem.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -21,9 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponseDto postUser(
-            @RequestBody UserRequestDto userRequestDto
-    ){
+    public UserResponseDto postUser(@Valid @RequestBody UserRequestDto userRequestDto){
         try{
             return  userService.registerUser(userRequestDto);
         } catch (SQLException error) {
@@ -52,11 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserResponseDto updateUser(
-            @PathVariable Long id,
-            @RequestBody UserRequestDto userRequestDto
-
-    ) {
+    public UserResponseDto updateUser(@Valid @PathVariable Long id, @RequestBody UserRequestDto userRequestDto) {
         try {
             return userService.updateUser(id, userRequestDto);
         }catch (SQLException error){

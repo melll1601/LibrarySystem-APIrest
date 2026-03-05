@@ -6,6 +6,7 @@ import com.weg.LibrarySystem.model.Book;
 import com.weg.LibrarySystem.model.Loan;
 import com.weg.LibrarySystem.repository.LoanRepository;
 import com.weg.LibrarySystem.service.LoanService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -23,9 +24,7 @@ public class LoanController {
     }
 
     @PostMapping
-    public LoanResponseDto postLoan(
-            @RequestBody LoanRequestDto loanRequestDto
-            ){
+    public LoanResponseDto postLoan(@Valid @RequestBody LoanRequestDto loanRequestDto){
 
         try{
             return loanService.registerLoan(loanRequestDto);
@@ -57,11 +56,7 @@ public class LoanController {
     }
 
     @PutMapping("/{id}")
-    public LoanResponseDto updateLoan(
-            @PathVariable Long id,
-            @RequestBody LoanRequestDto loanRequestDto
-
-    ) {
+    public LoanResponseDto updateLoan(@Valid @PathVariable Long id, @RequestBody LoanRequestDto loanRequestDto) {
 
         try {
             return loanService.updateLoan(id, loanRequestDto);
